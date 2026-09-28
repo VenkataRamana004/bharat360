@@ -6,12 +6,15 @@ Main Entrypoint:
 render_healthcare_module()
 
 Features:
-1. Dynamic Location Filtering (State & City)
-2. Hospital Finder with Cards & Map Visualization
-3. Healthcare Services Catalog with Categories & Cost Tiers
-4. Health Awareness Section (Informational Guidance & Advisory Disclaimer)
-5. Rule-Based Healthcare Service Recommender
-6. Healthcare Analytics Dashboard with Plotly
+1. Header & Civic-Tech Hero (Teal/Cyan visual identity)
+2. Key Metrics Row
+3. Location Selector (State & City)
+4. Existing Tabs:
+   - Hospital Finder
+   - Healthcare Services
+   - Health Awareness
+   - Service Recommender
+   - Analytics & Insights
 """
 
 import sys
@@ -32,7 +35,6 @@ try:
     )
     from .recommender import recommend_healthcare_resources
 except ImportError:
-    # Ensure current directory is in sys.path for direct execution
     current_dir = Path(__file__).resolve().parent
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
@@ -46,152 +48,22 @@ except ImportError:
     )
     from recommender import recommend_healthcare_resources
 
-
-def _inject_custom_styles():
-    """Injects high-contrast, clean visual styles tailored to the Bharat360 theme."""
-    st.markdown(
-        """
-        <style>
-        /* Card Containers */
-        .b360-card {
-            background-color: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 18px 22px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: all 0.2s ease-in-out;
-        }
-        .b360-card:hover {
-            border-color: #0284C7;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12);
-            transform: translateY(-2px);
-        }
-        .b360-card-header {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0F172A;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .b360-card-subtitle {
-            font-size: 0.9rem;
-            color: #64748B;
-            margin-bottom: 12px;
-        }
-        .b360-card-body {
-            font-size: 0.95rem;
-            color: #334155;
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-        /* Pill Badges */
-        .b360-badge {
-            display: inline-block;
-            font-size: 0.78rem;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 9999px;
-            margin-right: 6px;
-            margin-bottom: 6px;
-        }
-        .b360-badge-green {
-            background-color: #DCFCE7;
-            color: #166534;
-            border: 1px solid #BBF7D0;
-        }
-        .b360-badge-blue {
-            background-color: #E0F2FE;
-            color: #0369A1;
-            border: 1px solid #BAE6FD;
-        }
-        .b360-badge-purple {
-            background-color: #F3E8FF;
-            color: #6B21A8;
-            border: 1px solid #E9D5FF;
-        }
-        .b360-badge-amber {
-            background-color: #FEF3C7;
-            color: #92400E;
-            border: 1px solid #FDE68A;
-        }
-        .b360-badge-gray {
-            background-color: #F1F5F9;
-            color: #475569;
-            border: 1px solid #E2E8F0;
-        }
-        /* Metric Box */
-        .b360-stat-box {
-            background: linear-gradient(135deg, #F0FDF4 0%, #E0F2FE 100%);
-            border: 1px solid #CBD5E1;
-            border-radius: 10px;
-            padding: 14px 18px;
-            text-align: center;
-        }
-        .b360-stat-num {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #0E7490;
-        }
-        .b360-stat-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #475569;
-        }
-        /* Hero Banner */
-        .b360-hero-box {
-            background: linear-gradient(135deg, #0F766E 0%, #0369A1 100%);
-            color: #FFFFFF;
-            border-radius: 14px;
-            padding: 24px 28px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 16px rgba(15, 118, 110, 0.18);
-        }
-        .b360-hero-title {
-            font-size: 2.1rem;
-            font-weight: 800;
-            margin-bottom: 6px;
-            color: #FFFFFF;
-        }
-        .b360-hero-sub {
-            font-size: 1.1rem;
-            color: #E0F2FE;
-            margin-bottom: 0px;
-        }
-        .b360-disclaimer {
-            background-color: #FFFBEB;
-            border-left: 4px solid #F59E0B;
-            padding: 14px 18px;
-            border-radius: 0 8px 8px 0;
-            margin: 16px 0;
-            color: #78350F;
-            font-size: 0.88rem;
-            line-height: 1.5;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+from modules.ui_theme import inject_master_styles, render_brand_bar
 
 
 def _render_hero_section():
     """Renders the standard Hero banner matching the Bharat360 specification."""
-    try:
-        from modules.ui_theme import inject_master_styles
-        inject_master_styles()
-    except Exception:
-        pass
+    inject_master_styles()
+    render_brand_bar()
     st.markdown(
         """
-        <div class="b360-module-header">
+        <div class="b360-module-header" style="border-left: 4px solid #0891B2;">
             <div>
                 <h1 class="b360-module-title">🏥 Healthcare & Public Services</h1>
-                <p class="b360-module-sub">Find healthcare resources and public services that matter to you.</p>
+                <p class="b360-module-sub">Find healthcare resources, public hospital locators and preventive wellness guidance.</p>
             </div>
             <div>
-                <span class="b360-tag-pill" style="background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD;">
+                <span class="b360-tag-pill" style="background: #F0FDFA; color: #0F766E; border: 1px solid #99F6E4;">
                     Viksit Bharat 2047 • Universal Health
                 </span>
             </div>
@@ -202,14 +74,14 @@ def _render_hero_section():
 
 
 def _render_kpis(df_hospitals: pd.DataFrame, df_services: pd.DataFrame, df_awareness: pd.DataFrame):
-    """Renders quick metric highlights."""
+    """Renders quick metric highlights in clean civic-tech cards."""
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown(
             f"""
-            <div class="b360-stat-box">
-                <div class="b360-stat-num">{len(df_hospitals)}</div>
-                <div class="b360-stat-label">Hospitals & Centers</div>
+            <div class="b360-metric-card" style="border-top: 3px solid #0891B2;">
+                <div class="b360-metric-num" style="color: #0891B2;">{len(df_hospitals)}</div>
+                <div class="b360-metric-label">Hospitals & Centers</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -217,9 +89,9 @@ def _render_kpis(df_hospitals: pd.DataFrame, df_services: pd.DataFrame, df_aware
     with c2:
         st.markdown(
             f"""
-            <div class="b360-stat-box">
-                <div class="b360-stat-num">{len(df_services)}</div>
-                <div class="b360-stat-label">Public Health Services</div>
+            <div class="b360-metric-card" style="border-top: 3px solid #0D9488;">
+                <div class="b360-metric-num" style="color: #0D9488;">{len(df_services)}</div>
+                <div class="b360-metric-label">Public Health Services</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -227,25 +99,25 @@ def _render_kpis(df_hospitals: pd.DataFrame, df_services: pd.DataFrame, df_aware
     with c3:
         st.markdown(
             f"""
-            <div class="b360-stat-box">
-                <div class="b360-stat-num">{len(df_awareness)}</div>
-                <div class="b360-stat-label">Awareness Guides</div>
+            <div class="b360-metric-card" style="border-top: 3px solid #D97706;">
+                <div class="b360-metric-num" style="color: #D97706;">{len(df_awareness)}</div>
+                <div class="b360-metric-label">Awareness Guides</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
     with c4:
-        unique_cities = len(df_hospitals["city"].unique()) if not df_hospitals.empty else 0
+        unique_cities = len(df_hospitals["city"].unique()) if not df_hospitals.empty and "city" in df_hospitals.columns else 0
         st.markdown(
             f"""
-            <div class="b360-stat-box">
-                <div class="b360-stat-num">{unique_cities}</div>
-                <div class="b360-stat-label">Cities Covered</div>
+            <div class="b360-metric-card" style="border-top: 3px solid #06B6D4;">
+                <div class="b360-metric-num" style="color: #22D3EE;">{unique_cities}</div>
+                <div class="b360-metric-label">Cities Covered</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom: 0.6rem;'></div>", unsafe_allow_html=True)
 
 
 def _render_hospital_card(row: pd.Series):
@@ -259,24 +131,28 @@ def _render_hospital_card(row: pd.Series):
     lon = row.get("longitude")
 
     coord_badge = (
-        f'<span class="b360-badge b360-badge-gray">📍 Lat: {lat:.4f}, Lon: {lon:.4f}</span>'
+        f'<span class="b360-badge badge-gray">📍 Lat: {lat:.4f}, Lon: {lon:.4f}</span>'
         if pd.notnull(lat) and pd.notnull(lon)
-        else '<span class="b360-badge b360-badge-gray">📍 Coordinates N/A</span>'
+        else '<span class="b360-badge badge-gray">📍 Coordinates N/A</span>'
     )
 
     mgmt_badge = (
-        f'<span class="b360-badge b360-badge-green">🏛️ {mgmt}</span>'
+        f'<span class="b360-badge badge-green">🏛️ {mgmt}</span>'
         if str(mgmt).lower() == "government"
-        else f'<span class="b360-badge b360-badge-blue">🏢 {mgmt}</span>'
+        else f'<span class="b360-badge badge-blue">🏢 {mgmt}</span>'
     )
-    type_badge = f'<span class="b360-badge b360-badge-purple">🏷️ {h_type}</span>'
+    type_badge = f'<span class="b360-badge badge-purple">🏷️ {h_type}</span>'
 
     card_html = f"""
-    <div class="b360-card">
-        <div class="b360-card-header">🏥 {name}</div>
-        <div class="b360-card-subtitle">📍 <strong>{city}</strong>, {state}</div>
-        <div style="margin-top: 10px;">
+    <div class="b360-card" style="border-top: 3px solid #0891B2;">
+        <div class="b360-card-header">
+            <div>
+                <h4 class="b360-card-title">🏥 {name}</h4>
+                <span style="font-size: 0.82rem; color: #64748B;">📍 <strong>{city}</strong>, {state}</span>
+            </div>
             {mgmt_badge}
+        </div>
+        <div style="margin-top: 8px;">
             {type_badge}
             {coord_badge}
         </div>
@@ -292,16 +168,14 @@ def _render_service_card(row: pd.Series):
     available_at = row.get("available_at", "Government facilities")
     cost_cat = str(row.get("cost_category", "Not Specified"))
 
-    # Dynamic badge styling for cost
     cost_lower = cost_cat.lower()
     if "free" in cost_lower and "low" not in cost_lower:
-        cost_badge = f'<span class="b360-badge b360-badge-green">💰 Cost: {cost_cat}</span>'
+        cost_badge = f'<span class="b360-badge badge-green">💰 Cost: {cost_cat}</span>'
     elif "low" in cost_lower:
-        cost_badge = f'<span class="b360-badge b360-badge-blue">💰 Cost: {cost_cat}</span>'
+        cost_badge = f'<span class="b360-badge badge-blue">💰 Cost: {cost_cat}</span>'
     else:
-        cost_badge = f'<span class="b360-badge b360-badge-amber">💰 Cost: {cost_cat}</span>'
+        cost_badge = f'<span class="b360-badge badge-amber">💰 Cost: {cost_cat}</span>'
 
-    # Icon detection
     srv_lower = service_name.lower()
     if "opd" in srv_lower:
         icon = "🩺"
@@ -317,15 +191,14 @@ def _render_service_card(row: pd.Series):
         icon = "✨"
 
     card_html = f"""
-    <div class="b360-card">
-        <div class="b360-card-header">{icon} {service_name}</div>
-        <div class="b360-card-body">{desc}</div>
-        <div style="font-size: 0.88rem; color: #475569; margin-bottom: 8px;">
-            <strong>Available At:</strong> {available_at}
-        </div>
-        <div>
+    <div class="b360-card" style="border-top: 3px solid #0D9488;">
+        <div class="b360-card-header">
+            <h4 class="b360-card-title">{icon} {service_name}</h4>
             {cost_badge}
-            <span class="b360-badge b360-badge-gray">Civic Scheme</span>
+        </div>
+        <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 8px 0; line-height: 1.45;">{desc}</p>
+        <div style="font-size: 0.82rem; color: #64748B;">
+            <strong>Available At:</strong> {available_at}
         </div>
     </div>
     """
@@ -344,7 +217,6 @@ def _render_hospital_finder_tab(df_hospitals: pd.DataFrame, default_state: str, 
     # Filters row
     col1, col2, col3, col4 = st.columns([1.2, 1.2, 1.2, 1.5])
 
-    # Available options
     states = ["All States"] + get_unique_states(df_hospitals)
     selected_state_idx = states.index(default_state) if default_state in states else 0
     with col1:
@@ -386,7 +258,7 @@ def _render_hospital_finder_tab(df_hospitals: pd.DataFrame, default_state: str, 
 
     # Optional Map Display
     map_data = filtered_df.dropna(subset=["latitude", "longitude"])
-    show_map = st.toggle("🗺️ Show Facilities on Interactive Map", value=True)
+    show_map = st.toggle("🗺️ Show Facilities on Interactive Map", value=True, key="hf_map_toggle")
 
     if show_map:
         if not map_data.empty:
@@ -395,13 +267,11 @@ def _render_hospital_finder_tab(df_hospitals: pd.DataFrame, default_state: str, 
         else:
             st.info("No valid geographical coordinates found for the current filter.")
 
-    st.divider()
+    st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
 
-    # Hospital Cards Display
     if filtered_df.empty:
         st.warning("No healthcare facilities matched the selected filters. Try broadening your search.")
     else:
-        # Render cards in a 2-column grid
         card_cols = st.columns(2)
         for idx, (_, row) in enumerate(filtered_df.iterrows()):
             with card_cols[idx % 2]:
@@ -462,9 +332,9 @@ def _render_awareness_tab(df_awareness: pd.DataFrame):
             <strong>⚠️ CITIZEN HEALTH ADVISORY & DISCLAIMER:</strong><br>
             The health awareness information provided here is strictly for public education and resource discovery 
             under the Viksit Bharat 2047 initiative. 
-            <strong>It does not provide diagnosis, medical prescriptions, or personalized medical treatment recommendations.</strong><br>
-            In the event of acute symptoms or a medical emergency, please dial <strong>108 (Emergency)</strong> or <strong>102 (Ambulance)</strong>, 
-            or consult a certified medical practitioner immediately.
+            <strong>It does not provide medical diagnosis, prescriptions, or personalized medical treatment.</strong><br>
+            In the event of acute symptoms or an emergency, dial <strong>108 (Emergency)</strong> or <strong>102 (Ambulance)</strong>, 
+            or visit the nearest certified healthcare facility immediately.
         </div>
         """,
         unsafe_allow_html=True,
@@ -484,7 +354,6 @@ def _render_awareness_tab(df_awareness: pd.DataFrame):
             filtered_awareness["target_group"].str.lower() == selected_tg.lower()
         ]
 
-    # Topic Icons mapping
     topic_icons = {
         "hand hygiene": "🧼",
         "vaccination awareness": "💉",
@@ -500,13 +369,13 @@ def _render_awareness_tab(df_awareness: pd.DataFrame):
 
         icon = topic_icons.get(str(topic).strip().lower(), "📘")
 
-        with st.expander(f"{icon} {topic} — Recommended for: {target_group}", expanded=True):
+        with st.expander(f"{icon} {topic} — Target: {target_group}", expanded=True):
             st.markdown(f"**Guidance & Best Practice:**\n\n> {guidance}")
             st.markdown(
                 f"""
-                <div style="margin-top: 8px;">
-                    <span class="b360-badge b360-badge-blue">🎯 Target: {target_group}</span>
-                    <span class="b360-badge b360-badge-green">Civic Health Advisory</span>
+                <div style="margin-top: 6px;">
+                    <span class="b360-badge badge-blue">🎯 Target: {target_group}</span>
+                    <span class="b360-badge badge-green">Civic Health Advisory</span>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -524,7 +393,6 @@ def _render_recommender_tab(
     st.markdown("### 🎯 Smart Healthcare Resource Recommender")
     st.caption("Receive rule-based recommendations for public health services, local facilities, and guidance.")
 
-    # Advisory notice
     st.info("ℹ️ Recommendations are generated deterministically from verified public datasets based on your inputs.")
 
     with st.form("recommendation_form"):
@@ -584,14 +452,13 @@ def _render_recommender_tab(
         st.markdown("---")
         st.markdown("### 🤖 **AI-Powered Recommendations**")
 
-        # Rationale Callout
         if res["rationale"]:
             with st.container():
                 st.markdown("**Why these recommendations match your criteria:**")
                 for r in res["rationale"]:
                     st.markdown(f"- {r}")
 
-        st.markdown("<div style='margin-bottom: 16px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
 
         # 1. Recommended Services
         st.markdown("#### 1. Matching Public Health Services")
@@ -668,6 +535,7 @@ def _render_analytics_tab(df_hospitals: pd.DataFrame, df_services: pd.DataFrame)
             )
             fig_city.update_layout(
                 margin=dict(l=20, r=20, t=30, b=30),
+                height=280,
                 coloraxis_showscale=False,
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
@@ -688,10 +556,11 @@ def _render_analytics_tab(df_hospitals: pd.DataFrame, df_services: pd.DataFrame)
                 names="Management",
                 values="Count",
                 hole=0.45,
-                color_discrete_sequence=["#0E7490", "#0284C7", "#10B981", "#F59E0B"],
+                color_discrete_sequence=["#0891B2", "#0D9488", "#16A34A", "#D97706"],
             )
             fig_mgmt.update_layout(
                 margin=dict(l=20, r=20, t=30, b=30),
+                height=280,
                 paper_bgcolor="rgba(0,0,0,0)",
             )
             st.plotly_chart(fig_mgmt, use_container_width=True)
@@ -717,6 +586,7 @@ def _render_analytics_tab(df_hospitals: pd.DataFrame, df_services: pd.DataFrame)
             )
             fig_type.update_layout(
                 margin=dict(l=20, r=20, t=30, b=30),
+                height=280,
                 coloraxis_showscale=False,
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
@@ -737,11 +607,12 @@ def _render_analytics_tab(df_hospitals: pd.DataFrame, df_services: pd.DataFrame)
                 x="Cost Category",
                 y="Services Count",
                 color="Cost Category",
-                color_discrete_sequence=["#059669", "#0284C7", "#D97706", "#64748B"],
+                color_discrete_sequence=["#16A34A", "#0891B2", "#D97706", "#64748B"],
                 text="Services Count",
             )
             fig_cost.update_layout(
                 margin=dict(l=20, r=20, t=30, b=30),
+                height=280,
                 showlegend=False,
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
@@ -755,9 +626,9 @@ def _render_analytics_tab(df_hospitals: pd.DataFrame, df_services: pd.DataFrame)
 def render_healthcare_module():
     """
     Main entrypoint function for the Bharat360 Healthcare & Public Services Module.
-    Called by the unified Bharat360 Streamlit application.
+    Visual Hierarchy:
+    Header -> Key metrics -> Location selection -> Existing tabs (Hospital finder, Services, Awareness, Recommender, Analytics)
     """
-    _inject_custom_styles()
     _render_hero_section()
 
     # Load datasets dynamically
@@ -774,7 +645,7 @@ def render_healthcare_module():
     # Top KPI highlights
     _render_kpis(df_hospitals, df_services, df_awareness)
 
-    # Section 1: Global Location Selector
+    # Location Selection
     st.markdown("#### 📍 Location Selection")
     loc_c1, loc_c2, loc_c3 = st.columns([1.5, 1.5, 3])
 
@@ -794,18 +665,19 @@ def render_healthcare_module():
         selected_city = st.selectbox("Select City", city_options, key="b360_global_city")
 
     with loc_c3:
-        # Context summary badge
         st.markdown(
             f"""
-            <div style="padding-top: 14px;">
-                <span class="b360-badge b360-badge-blue">📍 Active Region: {selected_state} &rarr; {selected_city}</span>
-                <span class="b360-badge b360-badge-green">🇮🇳 Viksit Bharat 2047</span>
+            <div style="padding-top: 26px;">
+                <span class="b360-badge badge-blue">📍 Active Region: {selected_state} &rarr; {selected_city}</span>
+                <span class="b360-badge badge-green">🇮🇳 Universal Health</span>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    # Core Navigation Tabs
+    st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
+
+    # Core Navigation Tabs (exact names preserved)
     tab_hospitals, tab_services, tab_awareness, tab_recommender, tab_analytics = st.tabs(
         [
             "🏥 Hospital Finder",
@@ -832,7 +704,6 @@ def render_healthcare_module():
         _render_analytics_tab(df_hospitals, df_services)
 
 
-# Standalone runner for testing and development
 if __name__ == "__main__":
     st.set_page_config(
         page_title="Bharat360 - Healthcare & Public Services",

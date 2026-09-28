@@ -59,200 +59,283 @@ def _init_global_state():
         st.session_state["global_city"] = "Kakinada"
 
 
+@st.cache_data(show_spinner=False)
+def _load_summary_metrics():
+    """Dynamically aggregates key metrics from underlying datasets for landing page."""
+    metrics = {
+        "institutions": 24,
+        "scholarships": 10,
+        "hospitals": 15,
+        "health_services": 12,
+        "crops": 16,
+        "districts": 8,
+        "schemes": 14,
+        "transit": 12,
+    }
+    try:
+        from modules.education.data_loader import load_all_education_data
+        edu_data = load_all_education_data()
+        if "institutions" in edu_data and not edu_data["institutions"].empty:
+            metrics["institutions"] = len(edu_data["institutions"])
+        if "scholarships" in edu_data and not edu_data["scholarships"].empty:
+            metrics["scholarships"] = len(edu_data["scholarships"])
+    except Exception:
+        pass
+
+    try:
+        from modules.healthcare.data_loader import load_all_healthcare_data
+        health_data = load_all_healthcare_data()
+        if "hospitals" in health_data and not health_data["hospitals"].empty:
+            metrics["hospitals"] = len(health_data["hospitals"])
+        if "services" in health_data and not health_data["services"].empty:
+            metrics["health_services"] = len(health_data["services"])
+    except Exception:
+        pass
+
+    try:
+        from modules.agriculture.data_loader import load_all_agriculture_data
+        agri_data = load_all_agriculture_data()
+        if "crop_data" in agri_data and not agri_data["crop_data"].empty:
+            metrics["crops"] = len(agri_data["crop_data"])
+        if "rainfall" in agri_data and not agri_data["rainfall"].empty:
+            metrics["districts"] = len(agri_data["rainfall"])
+    except Exception:
+        pass
+
+    try:
+        from modules.governance.data_loader import load_all_governance_data
+        gov_data = load_all_governance_data()
+        if "schemes" in gov_data and not gov_data["schemes"].empty:
+            metrics["schemes"] = len(gov_data["schemes"])
+        if "transport" in gov_data and not gov_data["transport"].empty:
+            metrics["transit"] = len(gov_data["transport"])
+    except Exception:
+        pass
+
+    return metrics
+
+
 def render_landing_page():
-    """Renders the executive, Indian civic-tech Landing Page for Bharat360."""
+    """
+    Renders the executive, Indian civic-tech Landing Page for Bharat360
+    closely matching the dark navy cinematic reference design.
+    """
     inject_master_styles()
     render_brand_bar()
 
-    # 1. Executive Hero Section
+    summary_metrics = _load_summary_metrics()
+
+    # 1. Top Right Viksit Bharat 2047 Pill
     st.markdown(
         """
-        <div class="b360-landing-hero">
-            <div style="font-size: 2.2rem; margin-bottom: 2px;">🇮🇳</div>
-            <h1 class="b360-landing-title">BHARAT360</h1>
-            <div class="b360-landing-subtitle">One Platform. Multiple Needs.</div>
-            <p class="b360-landing-desc">
-                Supporting the vision of <strong>Viksit Bharat 2047</strong>. A unified, AI-powered public intelligence
-                dashboard empowering citizens, students, farmers, and administrators with localized, rule-based decision support.
-            </p>
-            <div>
-                <span class="b360-tag-pill">🏛️ National Civic-Tech</span>
-                <span class="b360-tag-pill">🤖 Explainable AI Engine</span>
-                <span class="b360-tag-pill">🌱 Resource Efficiency</span>
-                <span class="b360-tag-pill">🔒 100% Grounded in Verified Data</span>
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 0.1rem;">
+            <div class="b360-top-viksit-pill">
+                <span style="color: #10B981; font-weight: 800;">↗</span> Viksit Bharat 2047
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Hero CTA Buttons
-    cta_c1, cta_c2, cta_c3 = st.columns([1.6, 1.6, 3])
-    with cta_c1:
-        if st.button("🚀 Explore All Services", key="hero_btn_explore", use_container_width=True):
-            navigate_to("🇮🇳 My Bharat360")
-    with cta_c2:
-        if st.button("🌾 Agriculture Module", key="hero_btn_agri", use_container_width=True):
+    # 2. Executive Hero Section (Full width, lets the background breathe)
+    st.markdown(
+        """
+        <div class="b360-ref-hero">
+            <div class="b360-ref-hero-title">
+                BHARAT<span style="color: #F59E0B;">3</span><span style="color: #38BDF8;">6</span><span style="color: #10B981;">0</span>
+            </div>
+            <div class="b360-ref-hero-sub">One Platform. Multiple Needs.</div>
+            <p class="b360-ref-hero-desc">
+                Technology-driven insights for a developed Bharat.
+            </p>
+            <div class="b360-ref-hero-badges">
+                <span class="b360-ref-badge badge-blue">⚙ Data Driven</span>
+                <span class="b360-ref-badge badge-amber">💡 Explainable Rule Engine</span>
+                <span class="b360-ref-badge badge-green">🌱 Resource Efficiency</span>
+                <span class="b360-ref-badge badge-purple">👥 Verified Data</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # 3. Four Major Domain Dashboard Cards (One row on desktop matching reference)
+    d_col1, d_col2, d_col3, d_col4 = st.columns(4)
+
+    # Card 1: Education & Skills
+    with d_col1:
+        st.markdown(
+            f"""
+            <div class="b360-ref-card b360-card-edu">
+                <div class="b360-ref-icon-circle bg-blue">🎓</div>
+                <div class="b360-ref-card-title">Education & Skills</div>
+                <div class="b360-ref-card-quote">"Better learning. Brighter futures."</div>
+                <div class="b360-ref-card-metric">
+                    <div class="b360-ref-metric-val">👥 {summary_metrics['institutions']}+</div>
+                    <div class="b360-ref-metric-sub">Institutions & Programs</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Explore →", key="card_btn_edu", use_container_width=True):
+            navigate_to("🎓 Education & Skills")
+
+    # Card 2: Healthcare & Public Services
+    with d_col2:
+        st.markdown(
+            f"""
+            <div class="b360-ref-card b360-card-health">
+                <div class="b360-ref-icon-circle bg-coral">➕</div>
+                <div class="b360-ref-card-title">Healthcare & Public Services</div>
+                <div class="b360-ref-card-quote">"Accessible healthcare. Healthier lives."</div>
+                <div class="b360-ref-card-metric">
+                    <div class="b360-ref-metric-val">❤️ {summary_metrics['hospitals']}+</div>
+                    <div class="b360-ref-metric-sub">Hospitals & Centers</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Explore →", key="card_btn_health", use_container_width=True):
+            navigate_to("🏥 Healthcare & Public Services")
+
+    # Card 3: Agriculture & Sustainability
+    with d_col3:
+        st.markdown(
+            f"""
+            <div class="b360-ref-card b360-card-agri">
+                <div class="b360-ref-icon-circle bg-green">🌱</div>
+                <div class="b360-ref-card-title">Agriculture & Sustainability</div>
+                <div class="b360-ref-card-quote">"Smarter farming. Greener tomorrow."</div>
+                <div class="b360-ref-card-metric">
+                    <div class="b360-ref-metric-val">🌱 {summary_metrics['crops']}+</div>
+                    <div class="b360-ref-metric-sub">Crops & Water Profiles</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Explore →", key="card_btn_agri", use_container_width=True):
             navigate_to("🌾 Agriculture & Sustainability")
 
-    st.markdown("<div style='margin-bottom: 1.2rem;'></div>", unsafe_allow_html=True)
+    # Card 4: Governance, Finance & Mobility
+    with d_col4:
+        st.markdown(
+            f"""
+            <div class="b360-ref-card b360-card-gov">
+                <div class="b360-ref-icon-circle bg-purple">🏛️</div>
+                <div class="b360-ref-card-title">Governance, Finance & Mobility</div>
+                <div class="b360-ref-card-quote">"Transparent systems. Stronger India."</div>
+                <div class="b360-ref-card-metric">
+                    <div class="b360-ref-metric-val">🛡️ {summary_metrics['schemes']}+</div>
+                    <div class="b360-ref-metric-sub">Verified Public Schemes</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Explore →", key="card_btn_gov", use_container_width=True):
+            navigate_to("🏛️ Governance, Finance & Mobility")
 
-    # 2. National Impact Metrics Row (4-Column Layout)
-    m1, m2, m3, m4 = st.columns(4)
+    # 4. Bharat360 at a Glance Metrics Section (Using Real Dynamic Data)
+    st.markdown("<div style='margin-top: 1.6rem;'></div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.2rem;">
+            📊 Bharat360 at a Glance
+        </div>
+        <div style="font-size: 0.82rem; color: #94A3B8; margin-bottom: 0.85rem;">
+            Live dynamic aggregations synthesized across all four connected public service datasets.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    m1, m2, m3, m4, m5, m6 = st.columns(6)
     with m1:
         st.markdown(
-            """
-            <div class="b360-metric-card" style="border-top: 3px solid #0284C7;">
-                <div class="b360-metric-num" style="color: #0284C7;">24+</div>
-                <div class="b360-metric-label">Institutions & Colleges</div>
-                <small style="color: #64748B;">Degree, Polytechnic & IT</small>
+            f"""
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #2563EB;">
+                <div class="b360-ref-glance-num" style="color: #60A5FA;">{summary_metrics['institutions']}</div>
+                <div class="b360-ref-glance-label">Institutions</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
     with m2:
         st.markdown(
-            """
-            <div class="b360-metric-card" style="border-top: 3px solid #0E7490;">
-                <div class="b360-metric-num" style="color: #0E7490;">15+</div>
-                <div class="b360-metric-label">Hospitals & Centers</div>
-                <small style="color: #64748B;">Public & Specialized Health</small>
+            f"""
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #EF4444;">
+                <div class="b360-ref-glance-num" style="color: #F87171;">{summary_metrics['hospitals']}</div>
+                <div class="b360-ref-glance-label">Hospitals</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
     with m3:
         st.markdown(
-            """
-            <div class="b360-metric-card" style="border-top: 3px solid #16A34A;">
-                <div class="b360-metric-num" style="color: #16A34A;">100%</div>
-                <div class="b360-metric-label">Water Efficiency Rule Engine</div>
-                <small style="color: #64748B;">Rainfall & Crop Precision</small>
+            f"""
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #10B981;">
+                <div class="b360-ref-glance-num" style="color: #34D399;">{summary_metrics['crops']}</div>
+                <div class="b360-ref-glance-label">Crops Mapped</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
     with m4:
         st.markdown(
-            """
-            <div class="b360-metric-card" style="border-top: 3px solid #D97706;">
-                <div class="b360-metric-num" style="color: #D97706;">12+</div>
-                <div class="b360-metric-label">Public Schemes & Transit</div>
-                <small style="color: #64748B;">DBT, Credit & Urban Mobility</small>
+            f"""
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #F59E0B;">
+                <div class="b360-ref-glance-num" style="color: #FBBF24;">{summary_metrics['schemes']}</div>
+                <div class="b360-ref-glance-label">Public Schemes</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-
-    st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
-
-    # 3. Four Major Domain Dashboard Cards (2x2 Grid)
-    st.markdown("### 🏛️ **Select a Bharat360 Public Domain**")
-    st.caption("Access personalized resources, localized intelligence, and AI-powered recommendations across all four critical pillars.")
-
-    d_col1, d_col2 = st.columns(2)
-
-    # Card 1: Education & Skills
-    with d_col1:
+    with m5:
+        st.markdown(
+            f"""
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #8B5CF6;">
+                <div class="b360-ref-glance-num" style="color: #A78BFA;">{summary_metrics['transit']}</div>
+                <div class="b360-ref-glance-label">Transit Routes</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with m6:
         st.markdown(
             """
-            <div class="b360-domain-card" style="border-top: 4px solid #0284C7;">
-                <div class="b360-domain-icon">🎓</div>
-                <div class="b360-domain-title">Education & Skills</div>
-                <div style="font-size: 0.85rem; color: #0284C7; font-weight: 600; margin-bottom: 6px;">
-                    Scholarships, institutions and skill opportunities
-                </div>
-                <div class="b360-domain-desc">
-                    Search certified universities, colleges, and polytechnics. Discover fee-free government scholarships
-                    and skill-building bootcamps matched to your education level.
-                </div>
+            <div class="b360-ref-glance-card" style="border-top: 2.5px solid #38BDF8;">
+                <div class="b360-ref-glance-num" style="color: #38BDF8;">100%</div>
+                <div class="b360-ref-glance-label">Rule-Based AI</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Explore Education & Skills →", key="card_btn_edu", use_container_width=True):
-            navigate_to("🎓 Education & Skills")
 
-    # Card 2: Healthcare & Public Services
-    with d_col2:
-        st.markdown(
-            """
-            <div class="b360-domain-card" style="border-top: 4px solid #0E7490;">
-                <div class="b360-domain-icon">🏥</div>
-                <div class="b360-domain-title">Healthcare & Public Services</div>
-                <div style="font-size: 0.85rem; color: #0E7490; font-weight: 600; margin-bottom: 6px;">
-                    Find healthcare resources and public services
-                </div>
-                <div class="b360-domain-desc">
-                    Locate verified government hospitals and community health centers. Explore cashless Ayushman Bharat PM-JAY
-                    services, emergency trauma care, and citizen wellness advisories.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button("Explore Healthcare & Services →", key="card_btn_health", use_container_width=True):
-            navigate_to("🏥 Healthcare & Public Services")
-
-    st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
-    d_col3, d_col4 = st.columns(2)
-
-    # Card 3: Agriculture & Sustainability
-    with d_col3:
-        st.markdown(
-            """
-            <div class="b360-domain-card" style="border-top: 4px solid #16A34A;">
-                <div class="b360-domain-icon">🌾</div>
-                <div class="b360-domain-title">Agriculture & Sustainability</div>
-                <div style="font-size: 0.85rem; color: #16A34A; font-weight: 600; margin-bottom: 6px;">
-                    Explore farming and resource-efficiency solutions
-                </div>
-                <div class="b360-domain-desc">
-                    Access district-level rainfall analytics, water-requirement crop profiles, rule-based irrigation
-                    matching, and green farm sustainability initiatives for climate resilience.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button("Explore Agriculture & Sustainability →", key="card_btn_agri", use_container_width=True):
-            navigate_to("🌾 Agriculture & Sustainability")
-
-    # Card 4: Governance, Finance & Mobility
-    with d_col4:
-        st.markdown(
-            """
-            <div class="b360-domain-card" style="border-top: 4px solid #D97706;">
-                <div class="b360-domain-icon">🏛️</div>
-                <div class="b360-domain-title">Governance, Finance & Mobility</div>
-                <div style="font-size: 0.85rem; color: #D97706; font-weight: 600; margin-bottom: 6px;">
-                    Discover schemes, financial resources and mobility
-                </div>
-                <div class="b360-domain-desc">
-                    Find central and state welfare schemes with verified eligibility checklists, micro-credit financial inclusion
-                    models, and municipal transit routes for daily commuting.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        if st.button("Explore Governance & Mobility →", key="card_btn_gov", use_container_width=True):
-            navigate_to("🏛️ Governance, Finance & Mobility")
-
-    st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
-
-    # 4. How Bharat360 Works (Citizen Journey in 4 Steps)
-    st.markdown("### 🌟 **The Bharat360 Citizen Journey**")
-    st.caption("How Bharat360 synthesizes data to support informed civic decisions:")
+    # 5. The Bharat360 Citizen Journey
+    st.markdown("<div style='margin-top: 1.4rem;'></div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.2rem;">
+            🌟 The Bharat360 Citizen Journey
+        </div>
+        <div style="font-size: 0.82rem; color: #94A3B8; margin-bottom: 0.85rem;">
+            How Bharat360 synthesizes data to support informed civic decisions:
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     s1, s2, s3, s4 = st.columns(4)
     with s1:
         st.markdown(
             """
-            <div class="b360-card" style="text-align: center;">
-                <div style="font-size: 1.6rem; color: #0284C7; font-weight: 800;">1️⃣</div>
-                <h4 style="margin: 4px 0; font-size: 1rem;">Choose Domain</h4>
-                <p style="font-size: 0.82rem; color: #64748B;">Select Education, Healthcare, Agriculture, or Governance.</p>
+            <div class="b360-ref-glance-card" style="text-align: left; padding: 18px 18px;">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">1️⃣</div>
+                <div style="font-weight: 700; color: #FFFFFF; font-size: 0.96rem; margin-bottom: 4px;">Choose Domain</div>
+                <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.45;">Select Education, Healthcare, Agriculture, or Governance.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -260,10 +343,10 @@ def render_landing_page():
     with s2:
         st.markdown(
             """
-            <div class="b360-card" style="text-align: center;">
-                <div style="font-size: 1.6rem; color: #0E7490; font-weight: 800;">2️⃣</div>
-                <h4 style="margin: 4px 0; font-size: 1rem;">Set Profile</h4>
-                <p style="font-size: 0.82rem; color: #64748B;">Specify district, education level, crop demand, or income tier.</p>
+            <div class="b360-ref-glance-card" style="text-align: left; padding: 18px 18px;">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">2️⃣</div>
+                <div style="font-weight: 700; color: #FFFFFF; font-size: 0.96rem; margin-bottom: 4px;">Set Profile</div>
+                <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.45;">Specify district, education level, crop demand, or income tier.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -271,10 +354,10 @@ def render_landing_page():
     with s3:
         st.markdown(
             """
-            <div class="b360-card" style="text-align: center;">
-                <div style="font-size: 1.6rem; color: #16A34A; font-weight: 800;">3️⃣</div>
-                <h4 style="margin: 4px 0; font-size: 1rem;">Smart Match</h4>
-                <p style="font-size: 0.82rem; color: #64748B;">Transparent rule engines evaluate dataset attributes with zero hallucination.</p>
+            <div class="b360-ref-glance-card" style="text-align: left; padding: 18px 18px;">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">3️⃣</div>
+                <div style="font-weight: 700; color: #FFFFFF; font-size: 0.96rem; margin-bottom: 4px;">Smart Match</div>
+                <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.45;">Transparent rule engines evaluate dataset attributes with zero hallucination.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -282,10 +365,10 @@ def render_landing_page():
     with s4:
         st.markdown(
             """
-            <div class="b360-card" style="text-align: center;">
-                <div style="font-size: 1.6rem; color: #D97706; font-weight: 800;">4️⃣</div>
-                <h4 style="margin: 4px 0; font-size: 1rem;">Track Impact</h4>
-                <p style="font-size: 0.82rem; color: #64748B;">Inspect Plotly analytics and personalized Viksit Bharat readiness.</p>
+            <div class="b360-ref-glance-card" style="text-align: left; padding: 18px 18px;">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">4️⃣</div>
+                <div style="font-weight: 700; color: #FFFFFF; font-size: 0.96rem; margin-bottom: 4px;">Track Impact</div>
+                <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.45;">Inspect verified analytics and personalized Viksit Bharat readiness.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -299,24 +382,24 @@ def main():
     _init_global_state()
     inject_master_styles()
 
-    # Redesigned Professional Sidebar Navigation
+    # Dark Navy Civic-Tech Sidebar Brand Header
     st.sidebar.markdown(
         """
-        <div class="b360-sidebar-brand">
-            <div style="font-size: 1.8rem; margin-bottom: 2px;">🇮🇳</div>
-            <h3 style="margin: 0; color: #0B2545; font-weight: 800; letter-spacing: -0.5px;">BHARAT360</h3>
-            <p style="margin: 2px 0 0 0; font-size: 0.75rem; color: #E65100; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+        <div class="b360-sidebar-brand-ref">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                <span style="font-size: 1.3rem;">🇮🇳</span>
+                <span style="font-size: 1.22rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px;">
+                    BHARAT<span style="color:#F59E0B">3</span><span style="color:#38BDF8">6</span><span style="color:#10B981">0</span>
+                </span>
+            </div>
+            <div style="font-size: 0.72rem; color: #94A3B8; font-weight: 500;">
                 One Platform. Multiple Needs.
-            </p>
-            <span style="display: inline-block; background: #E0F2FE; color: #0369A1; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; margin-top: 6px;">
-                🇮🇳 Viksit Bharat 2047
-            </span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Navigation Radio synced with current_page state (no widget key collision)
     current_page = st.session_state.get("current_page", "🏠 Home")
     nav_index = NAV_OPTIONS.index(current_page) if current_page in NAV_OPTIONS else 0
 
@@ -326,21 +409,18 @@ def main():
         index=nav_index,
     )
 
-    # Sync state if changed via sidebar radio click
     if selected_module != current_page:
         navigate_to(selected_module)
 
-    # Back to Home button in sidebar when on any domain dashboard
     if current_page != "🏠 Home":
         if st.sidebar.button("← Back to Bharat360 Home", key="sidebar_back_home", use_container_width=True):
             navigate_to("🏠 Home")
 
     st.sidebar.markdown("---")
 
-    # Global Citizen Location Quick-Filter
     st.sidebar.markdown(
         """
-        <div style="font-size: 0.85rem; font-weight: 700; color: #0B2545; margin-bottom: 4px;">
+        <div style="font-size: 0.80rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
             📍 Citizen Region Context
         </div>
         """,
@@ -365,32 +445,33 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.markdown(
         """
-        <div style="font-size: 0.78rem; color: #64748B; line-height: 1.4;">
-            <strong>System Status:</strong><br>
-            🟢 4/4 Core Modules Active<br>
-            📊 100% Dynamic CSV Datasets<br>
-            🚀 Open Innovation Challenge
+        <div style="padding-top: 4px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.05rem;">🇮🇳</span>
+            <span style="font-size: 0.78rem; font-weight: 700; color: #CBD5E1; letter-spacing: 0.5px;">
+                Viksit Bharat 2047
+            </span>
+        </div>
+        <div style="font-size: 0.72rem; color: #64748B; margin-top: 4px; line-height: 1.4;">
+            4 Connected Public Domains • Dynamic Data Grounding
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Active Page Router
     active_nav = st.session_state.get("current_page", "🏠 Home")
 
-    # Top Back Button Bar on all domain dashboards
     if active_nav != "🏠 Home":
-        col_back, col_info = st.columns([3, 7])
+        col_back, col_info = st.columns([2.5, 7.5])
         with col_back:
             if st.button("← Back to Bharat360 Home", key="top_back_home", use_container_width=True):
                 navigate_to("🏠 Home")
         with col_info:
             st.markdown(
-                f"<div style='text-align: right; padding-top: 6px; color: #64748B; font-size: 0.88rem;'>"
-                f"Active Section: <strong>{active_nav}</strong></div>",
+                f"<div style='text-align: right; padding-top: 5px; color: #94A3B8; font-size: 0.85rem;'>"
+                f"Active Section: <strong style='color: #FFFFFF;'>{active_nav}</strong></div>",
                 unsafe_allow_html=True,
             )
-        st.markdown("<div style='margin-bottom: 8px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom: 6px;'></div>", unsafe_allow_html=True)
 
     if active_nav == "🏠 Home":
         render_landing_page()

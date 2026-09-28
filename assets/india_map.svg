@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="mapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#0284C7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9933" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#38BDF8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.6"/>
+    </linearGradient>
+    <radialGradient id="nodePulse" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#0284C7" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Stylized Geographic Silhouette of India -->
+  <path d="
+    M 280 40 
+    C 270 50, 255 70, 260 90 
+    C 265 110, 230 115, 210 135
+    C 195 150, 160 160, 150 185
+    C 140 210, 110 230, 95 260
+    C 85 285, 110 310, 130 320
+    C 150 330, 160 305, 180 300
+    C 195 295, 205 320, 190 350
+    C 175 380, 170 415, 180 450
+    C 190 485, 200 520, 220 560
+    C 240 600, 275 645, 290 670
+    C 300 650, 325 600, 350 560
+    C 375 520, 400 480, 420 440
+    C 435 410, 420 380, 400 360
+    C 380 340, 395 320, 415 315
+    C 435 310, 470 300, 490 280
+    C 510 260, 560 250, 580 230
+    C 590 215, 570 195, 540 200
+    C 510 205, 470 215, 450 210
+    C 430 205, 410 195, 390 190
+    C 370 185, 360 160, 340 145
+    C 320 130, 335 90, 315 65
+    Z"
+    fill="url(#mapGrad)" 
+    stroke="#38BDF8" 
+    stroke-width="1.8" 
+    stroke-opacity="0.4"
+    stroke-dasharray="4,2"
+  />
+
+  <!-- Network Interconnection Grid Lines -->
+  <!-- Delhi - Mumbai - Bengaluru - Chennai - Hyderabad - Kakinada - Kolkata - Guwahati -->
+  <g stroke="url(#glowLine)" stroke-width="1.4" opacity="0.6">
+    <!-- North to Central -->
+    <line x1="260" y1="180" x2="190" y2="330" />
+    <line x1="260" y1="180" x2="310" y2="280" />
+    <line x1="260" y1="180" x2="420" y2="280" />
+    
+    <!-- West & Central -->
+    <line x1="190" y1="330" x2="310" y2="280" />
+    <line x1="190" y1="330" x2="260" y2="440" />
+    <line x1="310" y1="280" x2="340" y2="400" />
+    
+    <!-- East & South Connections -->
+    <line x1="420" y1="280" x2="520" y2="220" />
+    <line x1="420" y1="280" x2="365" y2="380" />
+    <line x1="365" y1="380" x2="340" y2="400" />
+    <line x1="365" y1="380" x2="330" y2="490" />
+    <line x1="340" y1="400" x2="260" y2="440" />
+    <line x1="260" y1="440" x2="270" y2="520" />
+    <line x1="270" y1="520" x2="330" y2="490" />
+    <line x1="270" y1="520" x2="285" y2="630" />
+    <line x1="330" y1="490" x2="285" y2="630" />
+  </g>
+
+  <!-- Tech Node Pulse Circles (Hub Cities) -->
+  <!-- Delhi -->
+  <circle cx="260" cy="180" r="14" fill="url(#nodePulse)" />
+  <circle cx="260" cy="180" r="4.5" fill="#38BDF8" />
+  <text x="268" y="176" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Delhi NCR</text>
+
+  <!-- Mumbai -->
+  <circle cx="190" cy="330" r="12" fill="url(#nodePulse)" />
+  <circle cx="190" cy="330" r="4" fill="#38BDF8" />
+  <text x="130" y="334" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Mumbai</text>
+
+  <!-- Bhopal / Central -->
+  <circle cx="310" cy="280" r="9" fill="url(#nodePulse)" />
+  <circle cx="310" cy="280" r="3.5" fill="#38BDF8" />
+
+  <!-- Kolkata -->
+  <circle cx="420" cy="280" r="12" fill="url(#nodePulse)" />
+  <circle cx="420" cy="280" r="4" fill="#38BDF8" />
+  <text x="430" y="284" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Kolkata</text>
+
+  <!-- Guwahati -->
+  <circle cx="520" cy="220" r="9" fill="url(#nodePulse)" />
+  <circle cx="520" cy="220" r="3.5" fill="#38BDF8" />
+
+  <!-- Hyderabad -->
+  <circle cx="310" cy="420" r="11" fill="url(#nodePulse)" />
+  <circle cx="310" cy="420" r="4" fill="#38BDF8" />
+  <text x="238" y="424" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Hyderabad</text>
+
+  <!-- Kakinada / AP Hub -->
+  <circle cx="365" cy="395" r="13" fill="url(#nodePulse)" />
+  <circle cx="365" cy="395" r="4.5" fill="#FF9933" />
+  <text x="375" y="399" fill="#FFB74D" font-size="11" font-family="sans-serif" font-weight="700">Kakinada (AP)</text>
+
+  <!-- Bengaluru -->
+  <circle cx="270" cy="520" r="13" fill="url(#nodePulse)" />
+  <circle cx="270" cy="520" r="4.5" fill="#38BDF8" />
+  <text x="195" y="524" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Bengaluru</text>
+
+  <!-- Chennai -->
+  <circle cx="330" cy="490" r="12" fill="url(#nodePulse)" />
+  <circle cx="330" cy="490" r="4" fill="#38BDF8" />
+  <text x="340" y="494" fill="#94A3B8" font-size="11" font-family="sans-serif" font-weight="600">Chennai</text>
+
+  <!-- Kanyakumari -->
+  <circle cx="285" cy="630" r="8" fill="url(#nodePulse)" />
+  <circle cx="285" cy="630" r="3" fill="#10B981" />
+</svg>
