@@ -1,0 +1,6 @@
+id,service,area,target_group,purpose
+1,Basic Bank Account,Banking access,Eligible citizens,Account opening
+2,Financial Literacy,Financial awareness,Citizens,Budgeting/savings awareness
+3,Digital Payments,Payment access,Citizens,UPI/digital payment awareness
+4,Microcredit Awareness,Credit access,Small entrepreneurs,Loan awareness
+5,Insurance Awareness,Risk protection,Families,Insurance awareness

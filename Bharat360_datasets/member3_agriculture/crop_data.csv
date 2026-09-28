@@ -1,0 +1,6 @@
+id,crop,season,water_requirement,input_requirement,category
+1,Rice,Kharif,High,Medium,Paddy crop
+2,Maize,Kharif,Medium,Medium,Cereal crop
+3,Chilli,Kharif/Rabi,Medium,Medium,Commercial crop
+4,Sugarcane,Annual,Very High,High,Water-intensive crop
+5,Groundnut,Kharif/Rabi,Low,Low,Oilseed crop

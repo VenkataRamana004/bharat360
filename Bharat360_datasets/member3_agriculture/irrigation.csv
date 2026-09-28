@@ -1,0 +1,6 @@
+id,method,water_efficiency,cost_level,suitable_for
+1,Drip Irrigation,High,Low,"Vegetables, chilli, horticulture"
+2,Sprinkler Irrigation,Medium,Medium,"Groundnut, vegetables"
+3,Canal Irrigation,Medium,High,"Rice, sugarcane"
+4,Rainfed Farming,Low,Very Low,Rain-dependent crops
+5,Farm Pond,Medium,Medium,Supplemental irrigation

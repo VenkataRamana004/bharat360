@@ -1,0 +1,6 @@
+id,service,description,available_at,cost_category
+1,General OPD,Basic consultation,Government hospitals,Free/low cost
+2,Maternal Care,Pregnancy and maternal services,Government health facilities,Free/low cost
+3,Child Immunization,Routine vaccination,Public health centres,Free
+4,Emergency Care,Emergency medical assistance,Government hospitals,As applicable
+5,Diagnostic Services,Basic laboratory tests,Selected public facilities,Low cost

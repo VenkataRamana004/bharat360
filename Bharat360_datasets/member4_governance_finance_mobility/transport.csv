@@ -1,0 +1,6 @@
+id,mode,city,state,service_type,purpose
+1,City Bus,Kakinada,Andhra Pradesh,Public Bus,Urban mobility
+2,City Bus,Vijayawada,Andhra Pradesh,Public Bus,Urban mobility
+3,City Bus,Visakhapatnam,Andhra Pradesh,Public Bus,Urban mobility
+4,Rail,Rajahmundry,Andhra Pradesh,Railway,Intercity mobility
+5,Rail,Kakinada,Andhra Pradesh,Railway,Intercity mobility
