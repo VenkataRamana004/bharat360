@@ -13,15 +13,28 @@ from pathlib import Path
 import streamlit as st
 
 
+# Deployment-safe project root resolution (works across local Windows, Linux, and Cloud containers)
+BASE_DIR = Path(__file__).resolve().parent.parent
+ASSETS_DIR = BASE_DIR / "assets"
+BG_IMAGE_PATH = ASSETS_DIR / "bharat_cinematic_bg.jpg"
+
+
 @lru_cache(maxsize=1)
 def get_cinematic_bg_b64() -> str:
     """Safely loads and caches the base64-encoded cinematic India background image."""
-    bg_path = Path(__file__).resolve().parent.parent / "assets" / "bharat_cinematic_bg.jpg"
-    if bg_path.exists():
-        try:
-            return base64.b64encode(bg_path.read_bytes()).decode("utf-8")
-        except Exception:
-            pass
+    candidate_paths = [
+        BG_IMAGE_PATH,
+        Path(__file__).resolve().parent / "assets" / "bharat_cinematic_bg.jpg",
+        Path.cwd() / "assets" / "bharat_cinematic_bg.jpg",
+    ]
+    for bg_path in candidate_paths:
+        if bg_path.is_file():
+            try:
+                data = bg_path.read_bytes()
+                if data:
+                    return base64.b64encode(data).decode("utf-8")
+            except Exception:
+                continue
     return ""
 
 
@@ -63,6 +76,25 @@ html, body, [class*="css"], [class*="st-"] {{
 .stApp {{
     {bg_css}
     color: #F8FAFC !important;
+}}
+
+/* Ensure Streamlit view containers stay transparent so background is never obscured */
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewBlockContainer"],
+.main,
+section.main,
+[data-testid="stMain"],
+[data-testid="stBottom"] {{
+    background: transparent !important;
+    background-color: transparent !important;
+}}
+
+/* Header and toolbar transparency to prevent opaque bar on deployed Streamlit Cloud */
+header[data-testid="stHeader"],
+div[data-testid="stHeader"],
+[data-testid="stToolbar"] {{
+    background: transparent !important;
+    background-color: transparent !important;
 }}
 
 /* 2. Global Layout Optimization: Efficient Screen Usage, Equal Spacing */
