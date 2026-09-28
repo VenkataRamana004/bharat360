@@ -158,15 +158,23 @@ def _init_session_profile():
 
 def render_hero_section():
     """Renders the top branding hero card for Education & Skills."""
-    st.markdown(BHARAT_CSS, unsafe_allow_html=True)
+    try:
+        from modules.ui_theme import inject_master_styles
+        inject_master_styles()
+    except Exception:
+        pass
     st.markdown(
         """
-        <div class="b360-hero-card">
-            <span class="b360-badge">🇮🇳 Bharat360 • Viksit Bharat 2047</span>
-            <h1 class="b360-hero-title">🎓 Education & Skills</h1>
-            <p class="b360-hero-sub">
-                Discover education opportunities, scholarships and skills for your future.
-            </p>
+        <div class="b360-module-header">
+            <div>
+                <h1 class="b360-module-title">🎓 Education & Skills</h1>
+                <p class="b360-module-sub">Discover scholarships, institutions and skill opportunities.</p>
+            </div>
+            <div>
+                <span class="b360-tag-pill" style="background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD;">
+                    Viksit Bharat 2047 • Human Capital
+                </span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -289,7 +297,7 @@ def render_recommendations_tab(datasets: Dict[str, pd.DataFrame], profile: Dict[
     Renders Section 6: Recommendation Engine (🤖 Personalized Recommendations)
     Driven by transparent rule-based scoring.
     """
-    st.markdown("### 🤖 Personalized Recommendations")
+    st.markdown("### 🤖 **AI-Powered Recommendations**")
     st.info(f"Showing targeted opportunities for **{profile['education_level']}** student interested in **{profile['interest']}** ({profile['skill_level']} Level) in **{profile['state']}**.")
 
     recs = get_personalized_recommendations(profile, datasets)
@@ -518,29 +526,31 @@ def render_scholarships_tab(df_scholarships: pd.DataFrame):
         st.info("No scholarships match the selected criteria. Try selecting 'All' for broader coverage.")
         return
 
-    for _, row in filtered_sch.iterrows():
-        st.markdown(
-            f"""
-            <div class="b360-card" style="border-left: 5px solid #22c55e;">
-                <div class="b360-card-header">
-                    <div>
-                        <h4 class="b360-card-title">📜 {row.get('name', 'Scholarship Scheme')}</h4>
-                        <span style="font-size: 0.85rem; color: #64748b;">📍 Region: {row.get('region', 'India')}</span>
+    sch_cols = st.columns(2)
+    for idx, (_, row) in enumerate(filtered_sch.iterrows()):
+        with sch_cols[idx % 2]:
+            st.markdown(
+                f"""
+                <div class="b360-card" style="border-left: 5px solid #22c55e;">
+                    <div class="b360-card-header">
+                        <div>
+                            <h4 class="b360-card-title">📜 {row.get('name', 'Scholarship Scheme')}</h4>
+                            <span style="font-size: 0.85rem; color: #64748b;">📍 Region: {row.get('region', 'India')}</span>
+                        </div>
+                        <span class="b360-tag tag-green">Target: {row.get('level', 'UG/PG')}</span>
                     </div>
-                    <span class="b360-tag tag-green">Target: {row.get('level', 'UG/PG')}</span>
+                    <div style="margin: 8px 0;">
+                        <p style="margin: 3px 0; font-size: 0.9rem; color: #334155;">
+                            <strong>Eligibility Criteria:</strong> {row.get('eligibility', 'Open to eligible students')}
+                        </p>
+                        <p style="margin: 3px 0; font-size: 0.9rem; color: #166534;">
+                            <strong>Financial Benefit:</strong> {row.get('benefit', 'Financial assistance')}
+                        </p>
+                    </div>
                 </div>
-                <div style="margin: 8px 0;">
-                    <p style="margin: 3px 0; font-size: 0.9rem; color: #334155;">
-                        <strong>Eligibility Criteria:</strong> {row.get('eligibility', 'Open to eligible students')}
-                    </p>
-                    <p style="margin: 3px 0; font-size: 0.9rem; color: #166534;">
-                        <strong>Financial Benefit:</strong> {row.get('benefit', 'Financial assistance')}
-                    </p>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+                """,
+                unsafe_allow_html=True
+            )
 
 
 def render_skills_tab(df_skills: pd.DataFrame):

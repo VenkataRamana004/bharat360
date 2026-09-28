@@ -127,14 +127,23 @@ def _apply_custom_styles():
 
 def _render_hero_section(schemes_count: int, financial_count: int, transport_count: int, cities_count: int):
     """Render the standard Hero Header with metrics and high-level prototype notice."""
+    try:
+        from modules.ui_theme import inject_master_styles
+        inject_master_styles()
+    except Exception:
+        pass
     st.markdown(
         """
-        <div class="b360-hero-title">
-            <span>🏛️</span>
-            <span>Governance, Finance & Mobility</span>
-        </div>
-        <div class="b360-hero-sub">
-            Discover government opportunities, financial resources and mobility services.
+        <div class="b360-module-header">
+            <div>
+                <h1 class="b360-module-title">🏛️ Governance, Finance & Mobility</h1>
+                <p class="b360-module-sub">Discover government opportunities, financial resources and mobility services.</p>
+            </div>
+            <div>
+                <span class="b360-tag-pill" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">
+                    Viksit Bharat 2047 • Citizen Services
+                </span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -275,7 +284,7 @@ def _render_recommendations_tab(
     Render Tab 1: Personalized Citizen Dashboard (🤖 My Bharat360 Recommendations).
     Shows explainable rule-based recommendations across schemes, finance, and transport.
     """
-    st.markdown("### 🤖 My Bharat360 Recommendations")
+    st.markdown("### 🤖 **AI-Powered Recommendations**")
     st.markdown(
         "Personalized discovery tailored to your profile using transparent, rule-based matching. "
         "Review why each resource is suggested for your profile below."

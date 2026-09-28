@@ -178,11 +178,23 @@ def _inject_custom_styles():
 
 def _render_hero_section():
     """Renders the standard Hero banner matching the Bharat360 specification."""
+    try:
+        from modules.ui_theme import inject_master_styles
+        inject_master_styles()
+    except Exception:
+        pass
     st.markdown(
         """
-        <div class="b360-hero-box">
-            <div class="b360-hero-title">🏥 Healthcare & Public Services</div>
-            <div class="b360-hero-sub">Find healthcare resources and public services that matter to you.</div>
+        <div class="b360-module-header">
+            <div>
+                <h1 class="b360-module-title">🏥 Healthcare & Public Services</h1>
+                <p class="b360-module-sub">Find healthcare resources and public services that matter to you.</p>
+            </div>
+            <div>
+                <span class="b360-tag-pill" style="background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD;">
+                    Viksit Bharat 2047 • Universal Health
+                </span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -570,7 +582,7 @@ def _render_recommender_tab(
         )
 
         st.markdown("---")
-        st.markdown("## 📋 Recommended Healthcare Resources")
+        st.markdown("### 🤖 **AI-Powered Recommendations**")
 
         # Rationale Callout
         if res["rationale"]:
@@ -783,16 +795,15 @@ def render_healthcare_module():
 
     with loc_c3:
         # Context summary badge
-        st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
         st.markdown(
             f"""
-            <span class="b360-badge b360-badge-blue">📍 Active Region: {selected_state} &rarr; {selected_city}</span>
-            <span class="b360-badge b360-badge-green">🇮🇳 Viksit Bharat 2047</span>
+            <div style="padding-top: 14px;">
+                <span class="b360-badge b360-badge-blue">📍 Active Region: {selected_state} &rarr; {selected_city}</span>
+                <span class="b360-badge b360-badge-green">🇮🇳 Viksit Bharat 2047</span>
+            </div>
             """,
             unsafe_allow_html=True,
         )
-
-    st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
 
     # Core Navigation Tabs
     tab_hospitals, tab_services, tab_awareness, tab_recommender, tab_analytics = st.tabs(

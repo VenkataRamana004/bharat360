@@ -170,13 +170,23 @@ BHARAT360_CSS = """
 
 def _render_hero():
     """Renders the standard Hero banner required for Member 3."""
-    st.markdown(BHARAT360_CSS, unsafe_allow_html=True)
+    try:
+        from modules.ui_theme import inject_master_styles
+        inject_master_styles()
+    except Exception:
+        pass
     st.markdown(
         """
-        <div class="b360-header">
-            <h1>🌾 Agriculture & Sustainability</h1>
-            <p>Make smarter agricultural and resource decisions for a sustainable future.</p>
-            <div class="b360-tag">🇮🇳 Viksit Bharat 2047 • Resource Efficiency & Agro-Intelligence</div>
+        <div class="b360-module-header">
+            <div>
+                <h1 class="b360-module-title">🌾 Agriculture & Sustainability</h1>
+                <p class="b360-module-sub">Make smarter agricultural and resource decisions for a sustainable future.</p>
+            </div>
+            <div>
+                <span class="b360-tag-pill" style="background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;">
+                    Viksit Bharat 2047 • Agro-Intelligence
+                </span>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -783,7 +793,7 @@ def _render_smart_recommendations_section(
     Combine: selected crop, water availability, irrigation data, rainfall data, sustainability options.
     Provide transparent, rule-based recommendations. Clearly show the factors used.
     """
-    st.markdown("### 🤖 6. Smart Agriculture Recommendations")
+    st.markdown("### 🤖 **AI-Powered Recommendations**")
     st.caption("Multi-factor synthesis connecting agronomic demand, rainfall realities, and green practices.")
 
     # Current parameters from farmer profile
