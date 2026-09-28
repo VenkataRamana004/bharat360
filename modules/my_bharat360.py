@@ -168,6 +168,7 @@ def render_my_bharat360_module():
             unsafe_allow_html=True,
         )
         if st.button("Explore Education Module →", key="btn_nav_edu"):
+            st.session_state["current_page"] = "🎓 Education & Skills"
             st.session_state["nav_selection"] = "🎓 Education & Skills"
             st.rerun()
 
@@ -196,6 +197,7 @@ def render_my_bharat360_module():
             unsafe_allow_html=True,
         )
         if st.button("Explore Healthcare Module →", key="btn_nav_health"):
+            st.session_state["current_page"] = "🏥 Healthcare & Public Services"
             st.session_state["nav_selection"] = "🏥 Healthcare & Public Services"
             st.rerun()
 
@@ -226,6 +228,7 @@ def render_my_bharat360_module():
             unsafe_allow_html=True,
         )
         if st.button("Explore Agriculture Module →", key="btn_nav_agri"):
+            st.session_state["current_page"] = "🌾 Agriculture & Sustainability"
             st.session_state["nav_selection"] = "🌾 Agriculture & Sustainability"
             st.rerun()
 
@@ -254,6 +257,7 @@ def render_my_bharat360_module():
             unsafe_allow_html=True,
         )
         if st.button("Explore Governance Module →", key="btn_nav_gov"):
+            st.session_state["current_page"] = "🏛️ Governance, Finance & Mobility"
             st.session_state["nav_selection"] = "🏛️ Governance, Finance & Mobility"
             st.rerun()
 

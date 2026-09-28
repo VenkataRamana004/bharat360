@@ -37,10 +37,22 @@ NAV_OPTIONS = [
 ]
 
 
+def navigate_to(page_name: str):
+    """
+    Central navigation router.
+    Synchronizes current_page state and triggers immediate Streamlit rerun.
+    """
+    st.session_state["current_page"] = page_name
+    st.session_state["nav_selection"] = page_name
+    st.rerun()
+
+
 def _init_global_state():
     """Initializes global navigation and citizen location filters."""
-    if "nav_selection" not in st.session_state:
-        st.session_state["nav_selection"] = "🏠 Home"
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = st.session_state.get("nav_selection", "🏠 Home")
+    st.session_state["nav_selection"] = st.session_state["current_page"]
+
     if "global_state" not in st.session_state:
         st.session_state["global_state"] = "Andhra Pradesh"
     if "global_city" not in st.session_state:
@@ -78,12 +90,10 @@ def render_landing_page():
     cta_c1, cta_c2, cta_c3 = st.columns([1.6, 1.6, 3])
     with cta_c1:
         if st.button("🚀 Explore All Services", key="hero_btn_explore", use_container_width=True):
-            st.session_state["nav_selection"] = "🇮🇳 My Bharat360"
-            st.rerun()
+            navigate_to("🇮🇳 My Bharat360")
     with cta_c2:
         if st.button("🌾 Agriculture Module", key="hero_btn_agri", use_container_width=True):
-            st.session_state["nav_selection"] = "🌾 Agriculture & Sustainability"
-            st.rerun()
+            navigate_to("🌾 Agriculture & Sustainability")
 
     st.markdown("<div style='margin-bottom: 1.2rem;'></div>", unsafe_allow_html=True)
 
@@ -161,8 +171,7 @@ def render_landing_page():
             unsafe_allow_html=True,
         )
         if st.button("Explore Education & Skills →", key="card_btn_edu", use_container_width=True):
-            st.session_state["nav_selection"] = "🎓 Education & Skills"
-            st.rerun()
+            navigate_to("🎓 Education & Skills")
 
     # Card 2: Healthcare & Public Services
     with d_col2:
@@ -183,8 +192,7 @@ def render_landing_page():
             unsafe_allow_html=True,
         )
         if st.button("Explore Healthcare & Services →", key="card_btn_health", use_container_width=True):
-            st.session_state["nav_selection"] = "🏥 Healthcare & Public Services"
-            st.rerun()
+            navigate_to("🏥 Healthcare & Public Services")
 
     st.markdown("<div style='margin-bottom: 0.5rem;'></div>", unsafe_allow_html=True)
     d_col3, d_col4 = st.columns(2)
@@ -208,8 +216,7 @@ def render_landing_page():
             unsafe_allow_html=True,
         )
         if st.button("Explore Agriculture & Sustainability →", key="card_btn_agri", use_container_width=True):
-            st.session_state["nav_selection"] = "🌾 Agriculture & Sustainability"
-            st.rerun()
+            navigate_to("🌾 Agriculture & Sustainability")
 
     # Card 4: Governance, Finance & Mobility
     with d_col4:
@@ -230,8 +237,7 @@ def render_landing_page():
             unsafe_allow_html=True,
         )
         if st.button("Explore Governance & Mobility →", key="card_btn_gov", use_container_width=True):
-            st.session_state["nav_selection"] = "🏛️ Governance, Finance & Mobility"
-            st.rerun()
+            navigate_to("🏛️ Governance, Finance & Mobility")
 
     st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
 
@@ -310,21 +316,24 @@ def main():
         unsafe_allow_html=True,
     )
 
-    # Navigation Radio
-    current_nav = st.session_state.get("nav_selection", "🏠 Home")
-    nav_index = NAV_OPTIONS.index(current_nav) if current_nav in NAV_OPTIONS else 0
+    # Navigation Radio synced with current_page state (no widget key collision)
+    current_page = st.session_state.get("current_page", "🏠 Home")
+    nav_index = NAV_OPTIONS.index(current_page) if current_page in NAV_OPTIONS else 0
 
     selected_module = st.sidebar.radio(
         "Select Domain:",
         NAV_OPTIONS,
         index=nav_index,
-        key="main_nav_radio",
     )
 
-    # Sync state if changed via sidebar
-    if selected_module != st.session_state["nav_selection"]:
-        st.session_state["nav_selection"] = selected_module
-        st.rerun()
+    # Sync state if changed via sidebar radio click
+    if selected_module != current_page:
+        navigate_to(selected_module)
+
+    # Back to Home button in sidebar when on any domain dashboard
+    if current_page != "🏠 Home":
+        if st.sidebar.button("← Back to Bharat360 Home", key="sidebar_back_home", use_container_width=True):
+            navigate_to("🏠 Home")
 
     st.sidebar.markdown("---")
 
@@ -366,8 +375,22 @@ def main():
         unsafe_allow_html=True,
     )
 
-    # Route to Selected Module
-    active_nav = st.session_state.get("nav_selection", "🏠 Home")
+    # Active Page Router
+    active_nav = st.session_state.get("current_page", "🏠 Home")
+
+    # Top Back Button Bar on all domain dashboards
+    if active_nav != "🏠 Home":
+        col_back, col_info = st.columns([3, 7])
+        with col_back:
+            if st.button("← Back to Bharat360 Home", key="top_back_home", use_container_width=True):
+                navigate_to("🏠 Home")
+        with col_info:
+            st.markdown(
+                f"<div style='text-align: right; padding-top: 6px; color: #64748B; font-size: 0.88rem;'>"
+                f"Active Section: <strong>{active_nav}</strong></div>",
+                unsafe_allow_html=True,
+            )
+        st.markdown("<div style='margin-bottom: 8px;'></div>", unsafe_allow_html=True)
 
     if active_nav == "🏠 Home":
         render_landing_page()
